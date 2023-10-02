@@ -1,4 +1,4 @@
-# ppi_21
+# CulinaryCraft
 
 ## Grupo 21
 #### Esteban Gomez Benitez - (esgomez@unal.edu.co)  
