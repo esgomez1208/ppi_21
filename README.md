@@ -10,7 +10,7 @@
 #### El objetivo principal de este proyecto es crear una aplicación que ayude a los usuarios a descubrir nuevas recetas de cocina basadas en sus ingredientes disponibles y sus preferencias culinarias. La aplicación se centrará en proporcionar recomendaciones personalizadas de recetas para inspirar a los usuarios a cocinar platos deliciosos y variados utilizando los ingredientes que ya tienen en casa.
 
 ## Desplegable:
-#### link:
+#### Link: [CulinaryCraft - Streamlit.io](https://culinarycraft.streamlit.app/)
 
 ## Contactos:
 #### Esteban Gomez Benitez - (esgomez@unal.edu.co)  
