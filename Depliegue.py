@@ -10,15 +10,18 @@ recetas = {
     
 }
 
-# Interfaz de usuario
-st.title('CulinaryCraft')
-st.markdown('<h1 style="text-align: left;">CulinaryCraft</h1>', unsafe_allow_html=True)
+# Establecer estilo y formato personalizado
+st.markdown('<h1 style="text-align: left; color: blue;">CulinaryCraft</h1>', unsafe_allow_html=True)
 
+# Estilo para el título de las recetas
+st.markdown('<h2 style="color: blue;">Recetas:</h2>', unsafe_allow_html=True)
+
+# Interfaz de usuario
 ingrediente = st.text_input('Ingresa un ingrediente:')
 if ingrediente:
-    st.write('Recetas que incluyen', ingrediente.capitalize() + ':')
+    st.write(f'Recetas que incluyen "{ingrediente.capitalize()}":')
     for receta, ingredientes in recetas.items():
         if ingrediente.lower() in [ing.lower() for ing in ingredientes]:
-            st.write(f'- {receta}')
+            st.markdown(f'**{receta}**', unsafe_allow_html=True)
+            st.write('Ingredientes:', ", ".join(ingredientes))
 
-# Puedes agregar más componentes de la interfaz de usuario según tus necesidades
