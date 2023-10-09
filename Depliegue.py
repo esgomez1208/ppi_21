@@ -1,15 +1,18 @@
+# Importar librerías
 import streamlit as st
 
-# Datos de ejemplo de recetas
+# Datos de ejemplo de recetas con sus respectivos ingredientes
 recetas = {
     'Pasta con salsa de tomate': ['pasta', 'tomate', 'queso'],
     'Ensalada César': ['lechuga', 'pollo', 'crutones', 'aderezo'],
     'Pizza Margarita': ['masa de pizza', 'tomate', 'mozzarella', 'albahaca'],
-    # Agrega más recetas aquí
+    'Pata con salsa alfredo': ['pasta', 'mantequilla', 'crema de leche', 'nuez moscada']
+    
 }
 
 # Interfaz de usuario
-st.title('Aplicativo de Recomendación de Cocina')
+st.title('CulinaryCraft')
+st.markdown('<h1 style="text-align: left;">CulinaryCraft</h1>', unsafe_allow_html=True)
 
 ingrediente = st.text_input('Ingresa un ingrediente:')
 if ingrediente:
