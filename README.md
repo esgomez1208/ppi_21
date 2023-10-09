@@ -1,10 +1,10 @@
 # CulinaryCraft
 ## Tabla de Contenido
 
-- [Objetivo del Proyecto](Objetivo-del-Proyecto)
-- [Desplegable](Desplegable)
-- [Contactos](Contactos)
-- [Licencia](Licencia)
+- [Objetivo del Proyecto](#Objetivo-del-Proyecto)
+- [Desplegable](#Desplegable)
+- [Contactos](#Contactos)
+- [Licencia](#Licencia)
 
 ## Objetivo del Proyecto:
 #### El objetivo principal de este proyecto es crear una aplicación que ayude a los usuarios a descubrir nuevas recetas de cocina basadas en sus ingredientes disponibles y sus preferencias culinarias. La aplicación se centrará en proporcionar recomendaciones personalizadas de recetas para inspirar a los usuarios a cocinar platos deliciosos y variados utilizando los ingredientes que ya tienen en casa.
