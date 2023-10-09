@@ -1,4 +1,13 @@
 import streamlit as st
+import pandas as pd
+
+# Función que utiliza la base de datos de 100 mil líneas de recetas
+def cargar_dataset():
+    df = pd.read_csv('CienMilRecetas.csv')
+    return df
+
+df = cargar_dataset()
+
 
 # Datos de ejemplo de recetas con sus respectivos ingredientes
 recetas = {
@@ -27,11 +36,20 @@ elif selected_option == 'Búsqueda de Recetas por Ingrediente':
     
     ingrediente = st.text_input('Ingresa un ingrediente:')
     if ingrediente:
-        st.write(f'Recetas que incluyen "{ingrediente.capitalize()}":')
+        df_ingredientes = df[df['NER'].str.contains(ingrediente, case=False, na=False)]
+        
+        # Mostrar los nombres de las recetas
+        if not df_ingredientes.empty:
+            st.subheader('Recetas que contienen "{}":'.format(ingrediente))
+            for idx, row in df_ingredientes.iterrows():
+                st.write(row['Título'])
+        
+        """st.write(f'Recetas que incluyen "{ingrediente.capitalize()}":')
         for receta, ingredientes in recetas.items():
             if ingrediente.lower() in [ing.lower() for ing in ingredientes]:
                 st.markdown(f'**{receta}**', unsafe_allow_html=True)
-                st.write('Ingredientes:', ", ".join(ingredientes))
+                st.write('Ingredientes:', ", ".join(ingredientes))"""
+        
 elif selected_option == 'Búsqueda de Recetas por Filtrado':
     st.markdown('<h2 id="filtrado" style="text-align: left; color: white; font-style: italic;">Búsqueda de Recetas por Filtrado</h2>', unsafe_allow_html=True)
     st.write('Ingresa los ingredientes que deseas excluir:')
