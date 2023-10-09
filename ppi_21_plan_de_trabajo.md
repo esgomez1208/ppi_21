@@ -5,9 +5,9 @@
 <br>
  - Se crearon las determinadas ramas por los estudiantes:
 
-Esteban Gómez Benítez - @esgomez1208
+Esteban Gómez Benítez - [@esgomez1208](https://github.com/esgomez1208)
 
-Felipe Taborda Medina - @Taborda-2010
+Felipe Taborda Medina - [@Taborda-2010](https://github.com/Taborda-2010)
 
  - Se crearon los archivos Hola mundo.py en cada rama, y se realizó el respectivo commit y merge a la rama principal Main.
 
