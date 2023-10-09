@@ -22,9 +22,10 @@ Felipe Taborda Medina - @Taborda-2010
 #### *Fecha de Entrega: 9 de Octubre*
 <br>
 
-**Diseño de la Interfaz de Usuario:** Diseñar la estructura general de la aplicación, decidiendo cómo se verán los elementos en la pantalla. Esto incluirá la disposición de botones, formularios, menús y otros elementos de la interfaz de usuario.
-
-**Visualización de Recetas:** Utilizar Streamlit para mostrar recetas en una interfaz de usuario básica.
+| Actividad | Encargado |
+| ------------- | ------------- |
+| Pre-despliegue de la interfaz de usuario | Felipe |
+| Unir la interfaz con la base de datos | Esteban |
 
 ## Informe 04
 #### *Fecha de Entrega: 23 de octubre*
