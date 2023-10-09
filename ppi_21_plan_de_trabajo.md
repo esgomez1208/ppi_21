@@ -54,11 +54,12 @@ Felipe Taborda Medina - @Taborda-2010
 | ------------- | ------------- |
 | **Sistema de Traducción:** Implementación de un sistema de traducción para permitir que los usuarios vean las recetas en diferentes idiomas. Esto es últil para usuarios de diferentes regiones. | Felipe |
 | **Unificación de Bases de Datos:** Unificación de la base de datos de recetas y la base de datos del valor nutricional de los ingredientes. | Esteban |
-| **Registro de Usuarios y Lista de Recetas:** Agregación de un sistema de registro de usuarios para que los mismos puedan guardar sus recetas favoritas en una lista personalizada. | Felipe yEsteban |
+| **Registro de Usuarios y Lista de Recetas:** Agregación de un sistema de registro de usuarios para que los mismos puedan guardar sus recetas favoritas en una lista personalizada. | Felipe y Esteban |
 
 
 ## Informe 07
 #### *Fecha de Entrega: 27 de noviembre*
 <br>
- **Presentar el informe final debe contener todas las funcionalidades esperadas de la aplicación.**
+
+ **Presentación del informe final con todas las funcionalidades de la aplicación.**
 
