@@ -3,7 +3,7 @@ import pandas as pd
 
 # Función que utiliza la base de datos de 250 lineas de recetas
 def cargar_dataset():
-    df = pd.read_csv('database_reducido.csv')
+    df = pd.read_csv('db_reducida_spanish.csv')
     return df
 
 
