@@ -43,7 +43,7 @@ elif selected_option == 'Búsqueda de Recetas por Ingrediente':
         if not df_ingredientes.empty:
             st.subheader('Recetas que contienen "{}":'.format(ingrediente))
             for idx, row in df_ingredientes.iterrows():
-                st.write(row['Título'])
+                st.write(row['título'])
         
 elif selected_option == 'Búsqueda de Recetas por Filtrado':
     st.markdown('<h2 id="filtrado" style="text-align: left; color: white;"\
