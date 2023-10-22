@@ -1,9 +1,9 @@
 import streamlit as st
 import pandas as pd
 
-# Función que utiliza la base de datos de 100 mil líneas de recetas
+# Función que utiliza la base de datos de 250 lineas de recetas
 def cargar_dataset():
-    df = pd.read_csv('CienMilRecetas.csv')
+    df = pd.read_csv('database_reducido.csv')
     return df
 
 
