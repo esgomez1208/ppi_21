@@ -1,9 +1,9 @@
 import streamlit as st
 import pandas as pd
 
-# Función que utiliza la base de datos de 100 mil líneas de recetas
+# Función que utiliza la base de datos de 250 lineas de recetas
 def cargar_dataset():
-    df = pd.read_csv('CienMilRecetas.csv')
+    df = pd.read_csv('db_reducida_spanish.csv')
     return df
 
 
@@ -43,7 +43,7 @@ elif selected_option == 'Búsqueda de Recetas por Ingrediente':
         if not df_ingredientes.empty:
             st.subheader('Recetas que contienen "{}":'.format(ingrediente))
             for idx, row in df_ingredientes.iterrows():
-                st.write(row['Título'])
+                st.write(row['título'])
         
 elif selected_option == 'Búsqueda de Recetas por Filtrado':
     st.markdown('<h2 id="filtrado" style="text-align: left; color: white;"\
