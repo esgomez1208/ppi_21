@@ -32,8 +32,8 @@ if selected_option == 'Inicio':
              " busqueda para excluir ingredientes no deseados.')
 
 elif selected_option == 'Búsqueda de Recetas por Ingrediente':
-    st.markdown('<h2 id="busqueda" style="text-align: left; color: white;"\
-                " font-style: italic;">Búsqueda de Recetas por Ingrediente</h2>',\
+    st.markdown('<h3 id="busqueda" style="text-align: left; color: white;"\
+                " font-style: italic;">Búsqueda de Recetas por Ingrediente</h3>',\
                       unsafe_allow_html=True)
     
     ingrediente = st.text_input('Ingresa un ingrediente:')
@@ -41,11 +41,19 @@ elif selected_option == 'Búsqueda de Recetas por Ingrediente':
         # Filtrar el DataFrame por ingredientes
         df_ingredientes = df[df['NER'].str.contains(ingrediente, case=False, na=False)]
         
+         # Páginas de recetas
+        recetas_por_pagina = 10  # Cantidad de recetas por página
+        pagina = st.number_input('Página', min_value=1, value=1)
+
         # Mostrar los nombres de las recetas
         if not df_ingredientes.empty:
             st.subheader('Recetas que contienen "{}":'.format(ingrediente))
+  
+            # Filtrar recetas si es necesario (según ingredientes excluidos y opción de azúcar)
+            recetas_filtradas = []
             for idx, row in df_ingredientes.iterrows():
-                st.write(row['título'])
+                #mostrar_receta = True
+                recetas_filtradas.append(row)
         
 elif selected_option == 'Búsqueda de Recetas por Filtrado':
     st.markdown('<h2 id="filtrado" style="text-align: left; color: white;"\
