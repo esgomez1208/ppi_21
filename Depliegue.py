@@ -15,7 +15,6 @@ df = cargar_dataset()
 st.markdown('<h1 style="text-align: left; color: skyblue;">CulinaryCraft</h1>',\
              unsafe_allow_html=True)
 
-
 # Crear una barra lateral para la tabla de contenidos
 st.sidebar.title('Tabla de Contenido')
 selected_option = st.sidebar.selectbox(
@@ -41,6 +40,7 @@ if selected_option == 'Inicio':
         contenido = file.read()
     st.write(contenido)
 
+# Sección de Búsqueda de Búsqueda por Nombre de Receta
 elif selected_option == 'Búsqueda por Nombre de Receta':
     st.markdown('<h3 id="busqueda" style="text-align: left; color: white;"\
                 " font-style: italic;">Búsqueda por Nombre de Receta</h3>',\
@@ -104,7 +104,7 @@ elif selected_option == 'Búsqueda por Nombre de Receta':
                     for i in range(len(preparacion)):
                         st.write(i+1 , preparacion[i] )
 
-
+# Sección de Búsqueda de Recetas por Ingrediente
 elif selected_option == 'Búsqueda de Recetas por Ingrediente':
     st.markdown('<h3 id="busqueda" style="text-align: left; color: white;"\
                 " font-style: italic;">Búsqueda de Recetas por Ingrediente</h3>',\
@@ -168,6 +168,7 @@ elif selected_option == 'Búsqueda de Recetas por Ingrediente':
                     for i in range(len(preparacion)):
                         st.write(i+1 , preparacion[i] )
 
+# Sección de Búsqueda de Búsqueda de Recetas por Filtrado
 elif selected_option == 'Búsqueda de Recetas por Filtrado':
     st.markdown('<h3 id="filtrado" style="text-align: left; color: white;"\
                 " font-style: italic;">Búsqueda de Recetas por Filtrado</h3>',\
