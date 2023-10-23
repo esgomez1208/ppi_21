@@ -1,11 +1,12 @@
-import streamlit as st
-import pandas as pd
+# Se importan las libreías necesarias
+import pandas as pd  # Versión: 2.1.1
+import streamlit as st  # Versión: 1.27.2
 
-# Función que utiliza la base de datos de 250 lineas de recetas
 def cargar_dataset():
+    '''Función para importar la base de datos
+    de las 250 recetas'''
     df = pd.read_csv('db_reducida_spanish.csv')
     return df
-
 
 # Cargar el conjunto de datos
 df = cargar_dataset()
@@ -14,11 +15,12 @@ df = cargar_dataset()
 st.markdown('<h1 style="text-align: left; color: skyblue;">CulinaryCraft</h1>',\
              unsafe_allow_html=True)
 
+
 # Crear una barra lateral para la tabla de contenidos
 st.sidebar.title('Tabla de Contenido')
 selected_option = st.sidebar.selectbox(
     'Selecciona una opción:',
-    ['Inicio', 'Búsqueda de Recetas por Ingrediente', 'Búsqueda de Recetas por Filtrado']
+    ['Inicio', 'Búsqueda por Nombre de Receta','Búsqueda de Recetas por Ingrediente', 'Búsqueda de Recetas por Filtrado']
 )
 
 # Interfaz de usuario
