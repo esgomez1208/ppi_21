@@ -25,11 +25,21 @@ selected_option = st.sidebar.selectbox(
 
 # Interfaz de usuario
 if selected_option == 'Inicio':
-    st.write('Bienvenido a una aplicación que te ayudará"\
-             " a descubrir nuevas recetas de cocina basadas"\
-             " en tus ingredientes disponibles y tus preferencias culinarias."\
-             " Además podrás filtrar las recetas por categorías y criterios de"\
-             " busqueda para excluir ingredientes no deseados.')
+    st.write('Bienvenido a una aplicación que te ayudará\
+              a descubrir nuevas recetas de cocina basadas\
+              en tus ingredientes disponibles y tus preferencias culinarias.\
+              Además podrás filtrar las recetas por categorías y criterios de\
+              busqueda para excluir ingredientes no deseados.')
+
+    # Ventana tratamiento de datos
+    st.markdown('<h3 style="text-align: left; color: white;"\
+        ">Política de Tratamiento de Datos Personales</h3>', unsafe_allow_html=True)
+    
+    # Ruta al archivo de texto
+    archivo_txt = "Politica_tratamiento_de_datos.txt"
+    with open(archivo_txt, "r") as file:
+        contenido = file.read()
+    st.write(contenido)
 
 elif selected_option == 'Búsqueda por Nombre de Receta':
     st.markdown('<h3 id="busqueda" style="text-align: left; color: white;"\
