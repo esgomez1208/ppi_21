@@ -221,4 +221,39 @@ elif selected_option == 'Búsqueda de Recetas por Filtrado':
         # Calcular los índices de inicio y fin para la página actual
         inicio = (pagina - 1) * recetas_por_pagina
         fin = min(inicio + recetas_por_pagina, len(recetas_filtradas))
-    
+        
+        
+        if recetas_filtradas:
+            st.write(f"Mostrando recetas {inicio + 1} - {fin} de {len(recetas_filtradas)}")
+            for idx in range(inicio, fin):
+                row = recetas_filtradas[idx]
+
+                titulo = row['título']
+
+                # Mostrar la receta si no se excluye
+                st.markdown(f'<h4 id="filtrado" style="text-align: left; color: skyblue;"\
+                " font-style: italic;">{titulo}</h4>',\
+                      unsafe_allow_html=True)
+
+                # Agregar una sección de detalles emergente
+                with st.expander(f'Detalles de la receta: {row["título"]}', expanded=False):
+
+                    # Impresion de ingredientes
+                    ingredientes = row['Ingredientes'].split('&')
+
+                    st.markdown(f'<h5 id="filtrado" style="text-align: left; color: skyblue;"\
+                " font-style: italic;">Ingredientes:</h5>',\
+                      unsafe_allow_html=True)
+
+                    for i in range(len(ingredientes)):
+                        st.write(i+1 , ingredientes[i] )
+
+                    # Impresion de preparación
+                    preparacion = row['Direcciones'].split('&')
+
+                    st.markdown(f'<h5 id="filtrado" style="text-align: left; color: skyblue;"\
+                " font-style: italic;">Preparación paso a paso:</h5>',\
+                      unsafe_allow_html=True)
+
+                    for i in range(len(preparacion)):
+                        st.write(i+1 , preparacion[i] )
