@@ -56,20 +56,56 @@ elif selected_option == 'Búsqueda de Recetas por Ingrediente':
                 recetas_filtradas.append(row)
         
 elif selected_option == 'Búsqueda de Recetas por Filtrado':
-    st.markdown('<h2 id="filtrado" style="text-align: left; color: white;"\
-                " font-style: italic;">Búsqueda de Recetas por Filtrado</h2>',\
+    st.markdown('<h3 id="filtrado" style="text-align: left; color: white;"\
+                " font-style: italic;">Búsqueda de Recetas por Filtrado</h3>',\
                       unsafe_allow_html=True)
-    st.write('Ingresa los ingredientes que deseas excluir:')
-    ingredientes_excluir = st.text_input('Ingredientes a excluir (separados por comas):')
+   
+    # Cuadro de entrada para ingredientes a excluir
+    ingredientes_a_excluir = st.text_input('Ingresa ingredientes a excluir (separados por comas):')
+
+    # Definir el ingrediente "azúcar" para buscar en las recetas
+    ingrediente_azucar = "azúcar"
+
+    # Opción para excluir recetas con azúcar
+    excluir_azucar = st.checkbox('Excluir recetas con azúcar')
+
+    # Definir la lista de ingredientes no vegetarianos
+    ingredientes_no_vegetarianos = ["pollo", "carne", "pavo"]
+
+    #FILTRO VEGETARIANO
+    # Opción para excluir recetas no vegetarianas
+    excluir_no_vegetarianas = st.checkbox('Excluir recetas no vegetarianas')
+
+    # Páginas de recetas
+    recetas_por_pagina = 10  # Cantidad de recetas por página
+    pagina = st.number_input('Página', min_value=1, value=1)
+
+    if not df.empty:
+        # Filtrar recetas si es necesario (según ingredientes excluidos y opción de azúcar)
+        recetas_filtradas = []
+        for idx, row in df.iterrows():
+            mostrar_receta = True
+
+            # Verificar si se debe excluir la receta debido a ingredientes excluidos
+            if ingredientes_a_excluir:
+                ingredientes_excluidos = [ingrediente.strip() for ingrediente in ingredientes_a_excluir.split(',')]
+                for ingrediente in ingredientes_excluidos:
+                    if ingrediente in row['NER']:
+                        mostrar_receta = False
+
+            # Verificar si se debe excluir la receta debido al azúcar
+            if excluir_azucar and ingrediente_azucar in row['NER']:
+                mostrar_receta = False
+
+            # Verificar si se debe excluir la receta debido a ingredientes no vegetarianos
+            if excluir_no_vegetarianas and ((ingredientes_no_vegetarianos[0] or ingredientes_no_vegetarianos[1] or ingredientes_no_vegetarianos[2]) in row['NER']):
+                mostrar_receta = False
+
+            # Agregar la receta a la lista si no se excluye
+            if mostrar_receta:
+                recetas_filtradas.append(row)
+
+        # Calcular los índices de inicio y fin para la página actual
+        inicio = (pagina - 1) * recetas_por_pagina
+        fin = min(inicio + recetas_por_pagina, len(recetas_filtradas))
     
-    # Convertir la entrada en una lista de ingredientes a excluir
-    ingredientes_excluir = [ingrediente.strip() for ingrediente in\
-                             ingredientes_excluir.split(',')]
-    
-    if ingredientes_excluir:
-        st.write(f'Recetas que no contienen los siguientes ingredientes:\
-                  {", ".join(ingredientes_excluir)}')
-        for receta, ingredientes in recetas.items():
-            if not any(ing.lower() in ingredientes_excluir for ing in ingredientes):
-                st.markdown(f'**{receta}**', unsafe_allow_html=True)
-                st.write('Ingredientes:', ", ".join(ingredientes))
