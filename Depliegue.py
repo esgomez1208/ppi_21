@@ -31,6 +31,16 @@ if selected_option == 'Inicio':
              " Además podrás filtrar las recetas por categorías y criterios de"\
              " busqueda para excluir ingredientes no deseados.')
 
+elif selected_option == 'Búsqueda por Nombre de Receta':
+    st.markdown('<h3 id="busqueda" style="text-align: left; color: white;"\
+                " font-style: italic;">Búsqueda por Nombre de Receta</h3>',\
+                      unsafe_allow_html=True)
+    
+    nombre = st.text_input('Ingresa el nombre:')
+    if nombre:
+        # Filtrar el DataFrame por ingredientes
+        df_titulo = df[df['título'].str.contains(nombre, case=False, na=False)]
+
 elif selected_option == 'Búsqueda de Recetas por Ingrediente':
     st.markdown('<h3 id="busqueda" style="text-align: left; color: white;"\
                 " font-style: italic;">Búsqueda de Recetas por Ingrediente</h3>',\
