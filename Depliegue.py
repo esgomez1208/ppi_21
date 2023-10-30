@@ -128,7 +128,7 @@ if selected_option == 'Inicio':
               busqueda para excluir ingredientes no deseados.')
 
     # Ventana tratamiento de datos
-    st.markdown('<h3 style="text-align: left; color: white;"\
+    st.markdown('<h3 style="text-align: left; color: skyblue;"\
         ">Política de Tratamiento de Datos Personales</h3>', unsafe_allow_html=True)
     
     # Ruta al archivo de texto
@@ -240,8 +240,23 @@ elif selected_option == 'Búsqueda por Nombre de Receta':
                     # Aquí colocamos la tabla del valor nutricional de los ingredientes
                     st.write(tabla_valor_nutricional)
 
+                    # Solicita al usuario la calificación
+                    calificacion = st.number_input(f"¿Cuánto le pones a esta receta {row['Título']} del 1 al 5?:")
+
+                    # Verifica si el usuario proporcionó una calificación.
+                    if calificacion:
+                        # Obtiene el título de la receta en formato de string
+                        titulo = str(row['Título'])
+                        
+                        # Llama a una función para agregar la calificación a la receta
+                        agregar_calificacion(titulo, calificacion)
+                        
+                        # Llama a una función para calcular el nuevo promedio de calificaciones de la receta
+                        promedio(titulo, calificacion)
         else:
             st.write("No se encontraron resultados.")
+
+    cf.close()
 
 # Sección de Búsqueda de Recetas por Ingrediente
 elif selected_option == 'Búsqueda de Recetas por Ingrediente':
@@ -326,10 +341,26 @@ elif selected_option == 'Búsqueda de Recetas por Ingrediente':
                             st.write(i+1 , preparacion[i] )
 
                         # Aquí colocamos la tabla del valor nutricional de los ingredientes
-                        st.write(tabla_valor_nutricional) 
+                        st.write(tabla_valor_nutricional)
+
+                        # Solicita al usuario la calificación
+                        calificacion = st.number_input(f"¿Cuánto le pones a esta receta {row['Título']} del 1 al 5?:")
+
+                        # Verifica si el usuario proporcionó una calificación.
+                        if calificacion:
+                            # Obtiene el título de la receta en formato de string
+                            titulo = str(row['Título'])
+                            
+                            # Llama a una función para agregar la calificación a la receta
+                            agregar_calificacion(titulo, calificacion)
+                            
+                            # Llama a una función para calcular el nuevo promedio de calificaciones de la receta
+                            promedio(titulo, calificacion) 
        
         else:
             st.write("No se encontraron resultados.")
+    
+    cf.close()
 
 # Sección de Búsqueda de Búsqueda de Recetas por Filtrado
 elif selected_option == 'Búsqueda de Recetas por Filtrado':
@@ -438,7 +469,23 @@ elif selected_option == 'Búsqueda de Recetas por Filtrado':
                         st.write(i+1 , preparacion[i] )
 
                     # Aquí colocamos la tabla del valor nutricional de los ingredientes
-                    st.write(tabla_valor_nutricional) 
+                    st.write(tabla_valor_nutricional)
+
+                    # Solicita al usuario la calificación
+                    calificacion = st.number_input(f"¿Cuánto le pones a esta receta {row['Título']} del 1 al 5?:")
+
+                    # Verifica si el usuario proporcionó una calificación.
+                    if calificacion:
+                        # Obtiene el título de la receta en formato de string
+                        titulo = str(row['Título'])
+                        
+                        # Llama a una función para agregar la calificación a la receta
+                        agregar_calificacion(titulo, calificacion)
+                        
+                        # Llama a una función para calcular el nuevo promedio de calificaciones de la receta
+                        promedio(titulo, calificacion) 
 
     else:
         st.write("No se encontraron resultados.")
+
+    cf.close()
