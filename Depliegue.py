@@ -637,18 +637,6 @@ else:
                     st.markdown(f'<h4 id="filtrado" style="text-align: left; color: skyblue;"\
                     " font-style: italic;">{titulo}</h4>',\
                         unsafe_allow_html=True)
-                    
-                    # Lista para almacenar el valor nutricional de cada ingrediente
-                    nutricional = []
-
-                    for ingrediente in ingredientes_receta:
-                        info_nutricional = valor_nutricional[valor_nutricional['name'] == ingrediente]
-                        calorias = info_nutricional['calories'].values[0] if not info_nutricional.empty else "No encontrado"
-
-                        nutricional.append({'Ingrediente' : ingrediente, 'Calorías' : calorias})
-
-                    # convirtiendo lista en un dataframe para mostrarlo como tabla
-                    tabla_valor_nutricional = pd.DataFrame(nutricional)
 
 
                     # Agregar una sección de detalles emergente
@@ -674,22 +662,9 @@ else:
                         for i in range(len(preparacion)):
                             st.write(i+1 , preparacion[i] )
 
-                        # Aquí colocamos la tabla del valor nutricional de los ingredientes
-                        st.write(tabla_valor_nutricional)
+                        
 
-                        # Solicita al usuario la calificación
-                        calificacion = st.number_input(f"¿Cuánto le pones a esta receta {row['Título']} del 1 al 5?:")
-
-                        # Verifica si el usuario proporcionó una calificación.
-                        if calificacion:
-                            # Obtiene el título de la receta en formato de string
-                            titulo = str(row['Título'])
-                            
-                            # Llama a una función para agregar la calificación a la receta
-                            agregar_calificacion(titulo, calificacion)
-                            
-                            # Llama a una función para calcular el nuevo promedio de calificaciones de la receta
-                            promedio(titulo, calificacion)
+                       
             else:
                 st.write("No se encontraron resultados.")
 
