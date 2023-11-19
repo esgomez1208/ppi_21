@@ -130,6 +130,7 @@ def agregar_calificacion(receta_nombre, nueva_calificacion):
     except Exception as e:
         st.warning(f"Error en la función agregar_calificacion: {e}")
 
+
 # Se crea una instancia de la base de datos TinyDB llamada 'cf.json'
 cf = TinyDB('cf.json')
 usuarios = TinyDB('usuarios.json')
@@ -236,6 +237,10 @@ if get_current_user() is not None:
                     # Agregar una sección de detalles emergente
                     with st.expander(f'Detalles de la receta: {row["Título"]}', expanded=False):
 
+                        # Importar la columna de las imágenes de la receta
+                        image_URL = row['Imagen']
+                        st.image(image_URL)
+
                         # Impresion de ingredientes
                         ingredientes = row['Ingredientes'].split('&')
 
@@ -339,6 +344,10 @@ if get_current_user() is not None:
                         # Agregar una sección de detalles emergente
                         with st.expander(f'Detalles de la receta: {row["Título"]}', expanded=False):
 
+                            # Importar la columna de las imágenes de la receta
+                            image_URL = row['Imagen']
+                            st.image(image_URL)
+
                             # Impresion de ingredientes
                             ingredientes = row['Ingredientes'].split('&')
 
@@ -416,7 +425,7 @@ if get_current_user() is not None:
                 if ingredientes_a_excluir:
                     ingredientes_excluidos = [ingrediente.strip() for ingrediente in ingredientes_a_excluir.split(',')]
                     for ingrediente in ingredientes_excluidos:
-                        if ingrediente in row['ingredientes']:
+                        if ingrediente in row['Ingredientes']:
                             mostrar_receta = False
 
                 # Verificar si se debe excluir la receta debido al azúcar
@@ -465,6 +474,10 @@ if get_current_user() is not None:
 
                     # Agregar una sección de detalles emergente
                     with st.expander(f'Detalles de la receta: {row["Título"]}', expanded=False):
+
+                        # Importar la columna de las imágenes de la receta
+                        image_URL = row['Imagen']
+                        st.image(image_URL)
 
                         # Impresion de ingredientes
                         ingredientes = row['Ingredientes'].split('&')
@@ -601,7 +614,7 @@ else:
         
         nombre = st.text_input('Ingresa el nombre:')
         if nombre:
-            # Filtrar el DataFrame por ingredientes
+            # Filtrar el DataFrame por título
             df_titulo = df[df['Título'].str.contains(nombre, case=False, na=False)]
             
             # Páginas de recetas
@@ -642,6 +655,10 @@ else:
                     # Agregar una sección de detalles emergente
                     with st.expander(f'Detalles de la receta: {row["Título"]}', expanded=False):
 
+                        # Importar la columna de las imágenes de la receta
+                        image_URL = row['Imagen']
+                        st.image(image_URL)
+
                         # Impresion de ingredientes
                         ingredientes = row['Ingredientes'].split('&')
 
@@ -661,9 +678,6 @@ else:
 
                         for i in range(len(preparacion)):
                             st.write(i+1 , preparacion[i] )
-
-                        
-
                        
             else:
                 st.write("No se encontraron resultados.")
