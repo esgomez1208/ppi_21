@@ -29,7 +29,6 @@ def registrar_usuario(username, password, first_name, last_name, email, confirm_
 
     return True, "Registro exitoso. Ahora puede iniciar sesión."
 
-
 # Función para verificar credenciales
 def login(username, password):
     '''Esta funcion recibe como argumento el username y el password y verifica que
@@ -124,16 +123,33 @@ def agregar_calificacion(receta_nombre, nueva_calificacion):
     Exception: Si ocurre un error durante la inserción de la calificación.
     """
     try:
-        receta = Query()
         # Asegúrate de que el campo 'Título' sea el correcto en tu base de datos
         cf.insert({"Título": receta_nombre, "Calificación": nueva_calificacion})
     except Exception as e:
         st.warning(f"Error en la función agregar_calificacion: {e}")
 
+def agregar_receta_fav(usuario, receta):
+    try:
+        Recetas = Query()
+        user_entry = fav_recetas.get(Recetas.Usuario == usuario)
+
+        if user_entry:
+            # El usuario ya tiene recetas favoritas
+            fav_recetas.update({'Recetas': user_entry['Recetas'] + [receta]}, Recetas.Usuario == usuario)
+            st.success(f"La receta '{receta}' fue agregada a las favoritas de {usuario}")
+        else:
+            # El usuario no tiene recetas favoritas aún
+            fav_recetas.insert({'Usuario': usuario, 'Recetas': [receta]})
+            st.success(f"Nueva lista de recetas favoritas creada para {usuario} con la receta '{receta}'")
+
+    except Exception as e:
+        st.warning(f"Error en la función agregar_receta_fav: {e}")
+
 
 # Se crea una instancia de la base de datos TinyDB llamada 'cf.json'
 cf = TinyDB('cf.json')
 usuarios = TinyDB('usuarios.json')
+fav_recetas = TinyDB('fav_recetas.json')
 
 # Cargar el conjunto de datos
 df = cargar_dataset()
@@ -169,15 +185,46 @@ if 'username' not in st.session_state:
 if get_current_user() is not None:
     # Sidebar menu options for logged-in users
     st.sidebar.title('Tabla de Contenido')
-    selected_option = st.sidebar.selectbox("Menú", ['Búsqueda por Nombre de Receta',
+    selected_option = st.sidebar.selectbox("Menú", ['Inicio','Búsqueda por Nombre de Receta',
                                         'Búsqueda de Recetas por Ingrediente',
-                                        'Búsqueda de Recetas por Filtrado', 'Cerrar sesión'])
+                                        'Búsqueda de Recetas por Filtrado'])
+    
+    # reserva de espacio para mostrar botón en la parte inferior
+    for i in range(20):
+        st.sidebar.text("")
+
+    
+    # Botón para cerrar sesión
+    if st.sidebar.button("Cerrar sesión"):
+            st.session_state.username = None
+            st.success("Sesión cerrada con éxito. Por favor, inicie sesión nuevamente.")
 
     username = st.session_state.username
     User = Query()
+
+    if selected_option == 'Inicio':
+        st.markdown(f'<h3 id="busqueda" style="text-align: left; color: white;"\
+                    " font-style: italic;">Bienvenido {username}</h3>',\
+                        unsafe_allow_html=True)
+        st.write("Estas son las recetas que has guardado:")
+
+        try:
+            Recetas = Query()
+            user_entry = fav_recetas.get(Recetas.Usuario == username)
+
+            if user_entry:
+                print(f"Recetas favoritas de {username}:")
+                for receta in user_entry['Recetas']:
+                    st.write(receta)
+            else:
+                st.write(f"No se encontraron recetas favoritas para {username}")
+
+        except Exception as e:
+            st.warning(f"Error en la función obtener_recetas_fav: {e}")
+
    
 
-    if selected_option == 'Búsqueda por Nombre de Receta':
+    elif selected_option == 'Búsqueda por Nombre de Receta':
         st.markdown('<h3 id="busqueda" style="text-align: left; color: white;"\
                     " font-style: italic;">Búsqueda por Nombre de Receta</h3>',\
                         unsafe_allow_html=True)
@@ -277,6 +324,9 @@ if get_current_user() is not None:
                             
                             # Llama a una función para calcular el nuevo promedio de calificaciones de la receta
                             promedio(titulo, calificacion)
+
+                        if st.button(f'Guardar receta {titulo}'):
+                            agregar_receta_fav(username,titulo)
             else:
                 st.write("No se encontraron resultados.")
 
@@ -384,6 +434,10 @@ if get_current_user() is not None:
                                 
                                 # Llama a una función para calcular el nuevo promedio de calificaciones de la receta
                                 promedio(titulo, calificacion) 
+
+
+                            if st.button(f'Guardar receta {titulo}'):
+                                agregar_receta_fav(username,titulo)
         
             else:
                 st.write("No se encontraron resultados.")
@@ -516,26 +570,25 @@ if get_current_user() is not None:
                             # Llama a una función para calcular el nuevo promedio de calificaciones de la receta
                             promedio(titulo, calificacion) 
 
+                        if st.button(f'Guardar receta {titulo}'):
+                            agregar_receta_fav(username,titulo)
+
         else:
             st.write("No se encontraron resultados.")
 
         cf.close()
 
-    elif selected_option == "Cerrar sesión":
-        if st.button('Salir'):
-            st.session_state.username = None
-            st.success("Sesión cerrada con éxito. Por favor, inicie sesión nuevamente.")
         
 
 else:
     # Menú desplegable en la barra lateral para usuarios no logeados
     st.sidebar.title('Tabla de Contenido')
-    selected_option = st.sidebar.selectbox("Menú", ['Inicio',
+    selected_option = st.sidebar.selectbox("Menú", ['Acerca de',
                                         'Registrarse','Iniciar sesión',
                                         'Búsqueda por Nombre de Receta'])
 
     # Sección de inicio
-    if selected_option == 'Inicio':
+    if selected_option == 'Acerca de':
         st.write('Bienvenido a una aplicación que te ayudará\
               a descubrir nuevas recetas de cocina basadas\
               en tus ingredientes disponibles y tus preferencias culinarias.\
