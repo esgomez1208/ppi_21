@@ -145,6 +145,22 @@ def agregar_receta_fav(usuario, receta):
     except Exception as e:
         st.warning(f"Error en la función agregar_receta_fav: {e}")
 
+def eliminar_receta_fav(usuario, receta):
+    try:
+        Recetas = Query()
+        user_entry = fav_recetas.get(Recetas.Usuario == usuario)
+
+        if user_entry and receta in user_entry['Recetas']:
+            user_recipes = user_entry['Recetas']
+            user_recipes.remove(receta)
+            fav_recetas.update({'Recetas': user_recipes}, Recetas.Usuario == usuario)
+            print(f"Receta '{receta}' eliminada de las favoritas de {usuario}")
+        else:
+            print(f"La receta '{receta}' no existe en las favoritas de {usuario}")
+
+    except Exception as e:
+        print(f"Error en la función eliminar_receta_fav: {e}")
+
 
 # Se crea una instancia de la base de datos TinyDB llamada 'cf.json'
 cf = TinyDB('cf.json')
@@ -212,15 +228,100 @@ if get_current_user() is not None:
             Recetas = Query()
             user_entry = fav_recetas.get(Recetas.Usuario == username)
 
-            if user_entry:
+            if len(user_entry['Recetas']) > 0:
                 print(f"Recetas favoritas de {username}:")
                 for receta in user_entry['Recetas']:
                     st.write(receta)
+                    if receta:
+                        # Filtrar el DataFrame por ingredientes
+                        df_titulo = df[df['Título'].str.contains(receta, case=False, na=False)]
+
+                        # Mostrar los nombres de las recetas
+                        if not df_titulo.empty:
+                
+                            # Filtrar recetas si es necesario (según ingredientes excluidos y opción de azúcar)
+                            recetas_filtradas = []
+                            for idx, row in df_titulo.iterrows():
+                                #mostrar_receta = True
+                                recetas_filtradas.append(row)
+
+                        if recetas_filtradas:
+                            titulo = row['Título']
+
+                            # Variable que guarda el valor nutricional
+                            ingredientes_receta = row['NER'].split('&')
+
+                            # Mostrar la receta si no se excluye
+                            st.markdown(f'<h4 id="filtrado" style="text-align: left; color: skyblue;"\
+                            " font-style: italic;">{titulo}</h4>',\
+                                unsafe_allow_html=True)
+                            
+                            # Lista para almacenar el valor nutricional de cada ingrediente
+                            nutricional = []
+
+                            for ingrediente in ingredientes_receta:
+                                info_nutricional = valor_nutricional[valor_nutricional['name'] == ingrediente]
+                                calorias = info_nutricional['calories'].values[0] if not info_nutricional.empty else "No encontrado"
+
+                                nutricional.append({'Ingrediente' : ingrediente, 'Calorías' : calorias})
+
+                            # convirtiendo lista en un dataframe para mostrarlo como tabla
+                            tabla_valor_nutricional = pd.DataFrame(nutricional)
+
+
+                            # Agregar una sección de detalles emergente
+                            with st.expander(f'Detalles de la receta: {row["Título"]}', expanded=False):
+
+                                # Importar la columna de las imágenes de la receta
+                                image_URL = row['Imagen']
+                                st.image(image_URL)
+
+                                # Impresion de ingredientes
+                                ingredientes = row['Ingredientes'].split('&')
+
+                                st.markdown(f'<h5 id="filtrado" style="text-align: left; color: skyblue;"\
+                            " font-style: italic;">Ingredientes:</h5>',\
+                                unsafe_allow_html=True)
+
+                                for i in range(len(ingredientes)):
+                                    st.write(i+1 , ingredientes[i] )
+
+                                # Impresion de preparación
+                                preparacion = row['Preparacion'].split('&')
+
+                                st.markdown(f'<h5 id="filtrado" style="text-align: left; color: skyblue;"\
+                            " font-style: italic;">Preparación paso a paso:</h5>',\
+                                unsafe_allow_html=True)
+
+                                for i in range(len(preparacion)):
+                                    st.write(i+1 , preparacion[i] )
+
+                                # Aquí colocamos la tabla del valor nutricional de los ingredientes
+                                st.write(tabla_valor_nutricional)
+
+                                # Solicita al usuario la calificación
+                                calificacion = st.number_input(f"¿Cuánto le pones a esta receta {row['Título']} del 1 al 5?:")
+
+                                # Verifica si el usuario proporcionó una calificación.
+                                if calificacion:
+                                    # Obtiene el título de la receta en formato de string
+                                    titulo = str(row['Título'])
+                                    
+                                    # Llama a una función para agregar la calificación a la receta
+                                    agregar_calificacion(titulo, calificacion)
+                                    
+                                    # Llama a una función para calcular el nuevo promedio de calificaciones de la receta
+                                    promedio(titulo, calificacion)
+
+                                if st.button(f'Borrar receta {titulo}'):
+                                    eliminar_receta_fav(username, titulo)
+                        else:
+                            st.write("No se encontraron resultados.")
             else:
                 st.write(f"No se encontraron recetas favoritas para {username}")
 
         except Exception as e:
-            st.warning(f"Error en la función obtener_recetas_fav: {e}")
+            st.warning(f"Error en la función: {e}")
 
    
 
