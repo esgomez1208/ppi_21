@@ -432,7 +432,7 @@ if usuario_actual() is not None:
                 st.write(f"No se encontraron recetas favoritas para {username}")
 
         except Exception as e:
-            st.warning(f"Error en la función: {e}")
+            st.write(f"No se encontraron recetas favoritas para {username}")
 
    
     # Sección de busqueda por nombre de receta
