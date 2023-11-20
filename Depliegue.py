@@ -136,6 +136,20 @@ def agregar_calificacion(receta_nombre, nueva_calificacion):
         st.warning(f"Error en la función agregar_calificacion: {e}")
 
 def agregar_receta_fav(usuario, receta):
+    """
+    Agrega una receta a la lista de recetas favoritas de un usuario.
+
+    Args:
+    - usuario: Nombre de usuario para identificar al usuario.
+    - receta: Nombre o identificador de la receta a agregar a las favoritas.
+
+    Returns:
+    - La receta '{receta}' fue agregada a las favoritas de {usuario}
+    - Nueva lista de recetas favoritas creada para {usuario} con la receta '{receta}'
+
+    Raises:
+    - Exception: Posibles errores durante el proceso de agregado de recetas favoritas.
+    """
     try:
         Recetas = Query()
         user_entry = fav_recetas.get(Recetas.Usuario == usuario)
@@ -147,12 +161,27 @@ def agregar_receta_fav(usuario, receta):
         else:
             # El usuario no tiene recetas favoritas aún
             fav_recetas.insert({'Usuario': usuario, 'Recetas': [receta]})
-            st.success(f"Nueva lista de recetas favoritas creada para {usuario} con la receta '{receta}'")
+            st.success(f"Nueva lista de recetas favoritas creada para {usuario} con la receta {receta}")
 
     except Exception as e:
         st.warning(f"Error en la función agregar_receta_fav: {e}")
 
 def eliminar_receta_fav(usuario, receta):
+    """
+    Elimina una receta de la lista de recetas favoritas de un usuario
+    en la base de datos fav_recetas.json.
+
+    Args:
+    - usuario: Nombre de usuario para identificar al usuario.
+    - receta: Nombre o identificador de la receta a eliminar de las favoritas.
+
+    Returns:
+    - Receta '{receta}' eliminada de las favoritas de {usuario}
+    - La receta '{receta}' no existe en las favoritas de {usuario}
+
+    Raises:
+    - Exception: Posibles errores durante el proceso de eliminación de recetas favoritas.
+    """
     try:
         Recetas = Query()
         user_entry = fav_recetas.get(Recetas.Usuario == usuario)
@@ -169,6 +198,21 @@ def eliminar_receta_fav(usuario, receta):
         warning(f"Error en la función eliminar_receta_fav: {e}")
 
 def cambiar_contraseña(usuario, contraseña_actual, contraseña_nueva):
+    """
+    Esta función cambia la contraseña de un usuario en la base de datos usuarios.
+
+    Args:
+    - usuario: Nombre de usuario para identificar al usuario.
+    - contraseña_actual: Contraseña actual del usuario.
+    - contraseña_nueva: Nueva contraseña que se asignará al usuario.
+
+    Returns:
+    - Cambio de contraseña exitoso
+    - Error al cambiar de contraseña: contraseña actual incorrecta
+
+    Raises:
+    - Exception: Posibles errores durante el proceso de cambio de contraseña.
+    """
     try:
         User = Query()
         user_entry = usuarios.get(User.username == usuario)
@@ -258,7 +302,8 @@ if usuario_actual() is not None:
                                         'Búsqueda de Recetas por Filtrado'])
     
     # reserva de espacio para mostrar botón en la parte inferior
-    for i in range(15):
+
+    for i in np.arange(15):
         st.sidebar.text("")
 
     # Botón para cerrar sesión
@@ -403,7 +448,9 @@ if usuario_actual() is not None:
             df_titulo = df[df['Título'].str.contains(nombre, case=False, na=False)]
             
             # Páginas de recetas
-            recetas_por_pagina = 10  # Cantidad de recetas por página
+            st.write("Navegue entre los resultados usando el (+) y el (-)")
+            # Cantidad de recetas por página
+            recetas_por_pagina = 10  
             pagina = st.number_input('Página', min_value=1, value=1)
 
             # Mostrar los nombres de las recetas
@@ -513,7 +560,8 @@ if usuario_actual() is not None:
             df_ingredientes = df[df['Ingredientes'].str.contains(ingrediente, case=False, na=False)]
             
             # Páginas de recetas
-            recetas_por_pagina = 10  # Cantidad de recetas por página
+            st.write("Navegue entre los resultados usando el (+) y el (-)")
+            recetas_por_pagina = 10 
             pagina = st.number_input('Página', min_value=1, value=1)
 
             # Mostrar los nombres de las recetas
@@ -634,7 +682,8 @@ if usuario_actual() is not None:
 
 
         # Páginas de recetas
-        recetas_por_pagina = 10  # Cantidad de recetas por página
+        st.write("Navegue entre los resultados usando el (+) y el (-)")
+        recetas_por_pagina = 10
         pagina = st.number_input('Página', min_value=1, value=1)
 
         if not df.empty:
@@ -755,11 +804,39 @@ else:
 
     # Sección de Bienvenida
     if selected_option == 'Acerca de CulinaryCraft':
-        st.write('Bienvenido a una aplicación que te ayudará\
-              a descubrir nuevas recetas de cocina basadas\
-              en tus ingredientes disponibles y tus preferencias culinarias.\
-              Además podrás filtrar las recetas por categorías y criterios de\
-              busqueda para excluir ingredientes no deseados.')
+        st.write("Descubre un mundo de sabores adaptado a ti. Nuestra aplicación te \
+                ayuda a encontrar recetas deliciosas según tus ingredientes y preferencias\
+                 culinarias. ¿Eres vegano, te apasiona la comida italiana o buscas algo\
+                sin gluten? Con nuestra aplicación, filtrar las recetas es fácil: podrás\
+                 seleccionar categorías y excluir los ingredientes que no desees. Además,\
+                 al registrarte, desbloquearás la posibilidad de guardar tus recetas favoritas,\
+                 calificarlas y acceder a información detallada sobre sus nutrientes.\
+                 ¡Únete a nosotros y experimenta la cocina de una manera totalmente nueva!")
+
+        st.markdown('<h2 style="text-align: left; color: skyblue;">Acerca de nosotros</h2>',\
+             unsafe_allow_html=True)
+
+        st.write("Somos un equipo apasionado por la comida y la facilidad en la cocina.\
+                Nuestra misión es simplificar tu experiencia culinaria y hacerla más emocionante.\
+                Nos esforzamos por ofrecerte una amplia gama de recetas, desde platos tradicionales\
+                hasta las últimas tendencias gastronómicas, todo adaptado a tus gustos y necesidades.")
+
+        st.markdown('<h2 style="text-align: left; color: skyblue;">¡Regístrate para más beneficios!</h2>',\
+             unsafe_allow_html=True)
+
+        st.write("¿Quieres sacarle el máximo provecho a la aplicación? Regístrate para acceder a\
+                 dos funcionalidades exclusivas: podrás guardar tus recetas favoritas y, además,\
+                 tendrás la oportunidad de calificarlas, lo que nos ayudará a mejorar continuamente.\
+                ¡Pero eso no es todo! También podrás visualizar información nutricional detallada de \
+                cada receta. Únete a nosotros y convierte tu experiencia culinaria en algo aún más increíble.")
+
+        st.markdown('<h2 style="text-align: left; color: skyblue;">Contacto</h2>',\
+             unsafe_allow_html=True)
+
+        st.write("¡Nos encantaría escucharte! Si tienes preguntas, comentarios o sugerencias,\
+                 no dudes en ponerte en contacto con nosotros.")
+        st.write("-Correo Electrónico: culinarycraftt@gmail.com")
+        st.write("-Teléfono: +57 301 518 5942")
 
     # Sección de Registro
     elif selected_option == "Registrarse":
@@ -870,6 +947,7 @@ else:
             df_titulo = df[df['Título'].str.contains(nombre, case=False, na=False)]
             
             # Páginas de recetas
+            st.write("Navegue entre los resultados usando el (+) y el (-)")
             recetas_por_pagina = 10  # Cantidad de recetas por página
             pagina = st.number_input('Página', min_value=1, value=1)
 
