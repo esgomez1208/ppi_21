@@ -195,7 +195,7 @@ def eliminar_receta_fav(usuario, receta):
             st.warning(f"La receta '{receta}' no existe en las favoritas de {usuario}")
 
     except Exception as e:
-        warning(f"Error en la función eliminar_receta_fav: {e}")
+        st.warning(f"Error en la función eliminar_receta_fav: {e}")
 
 def cambiar_contraseña(usuario, contraseña_actual, contraseña_nueva):
     """
