@@ -302,7 +302,6 @@ if usuario_actual() is not None:
                                         'Búsqueda de Recetas por Filtrado'])
     
     # reserva de espacio para mostrar botón en la parte inferior
-
     for i in np.arange(15):
         st.sidebar.text("")
 
