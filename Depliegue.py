@@ -855,7 +855,7 @@ else:
             # Inicializa la variable aceptar_politica
             
             # Variable de estado para rastrear si el usuario ha visto la política
-            st.session_state.politica_vista = False
+            st.session_state.politica_vista = True
 
             
             # Botón para abrir la ventana emergente en la segunda columna
