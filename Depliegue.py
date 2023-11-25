@@ -349,15 +349,24 @@ if usuario_actual() is not None:
         
         # Apartado para cambiar de contraseña
         with st.expander(f'{username} aquí puede cambiar su contraseña:'):
-            current_password = st.text_input("Contraseña actual:", type = "password")
-            new_password = st.text_input("Nueva Contraseña:", type = "password")
-            confirm_password = st.text_input("Confirmar contraseña:", type = "password")
 
-            if st.button('Cambiar contraseña') and new_password == confirm_password:
-                cambiar_contraseña(username,current_password,new_password)
+            ps = st.text_input("Contraseña actual:", type="password")
+            ps_new = st.text_input("Nueva Contraseña:", type="password")
+            ps_new_conf = st.text_input("Confirmar Nueva Contraseña:", type="password")
+            if ps_new == ps_new_conf:
+                if st.button("Cambiar contraseña"):
+                    login_successful, message = login(username, ps)
+                    if login_successful:
+                        us_s = db_usuarios.fetch({"username":username})
+                        itm = us_s.items[0]
+                        llave = itm.get("key")
+                        db_usuarios.update({"password":ps_new},key=llave)
+                        st.success("Contraseña cambiada con exito")
 
+                    else:
+                        st.warning("Credenciales incorrectas")
             else:
-                st.warning('verifique sus credenciales')
+                st.warning("Las Contraseñas no coinciden")
 
         # Impresión de las recetas guardadas por el usuario
         st.write("Estas son las recetas que has guardado:")
