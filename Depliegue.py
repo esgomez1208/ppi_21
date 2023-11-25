@@ -375,7 +375,7 @@ if usuario_actual() is not None:
                         st.success("Contraseña cambiada con exito")
 
 
-                        bl_correo, email = obtener_correo_por_usuario(usuario)
+                        bl_correo = us_s.items[4]
 
                         if bl_correo:
 
