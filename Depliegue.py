@@ -63,6 +63,17 @@ def usuario_actual():
     '''
     return st.session_state.username
 
+def obtener_correo_por_usuario(username):
+    # Realiza una consulta en la base de datos buscando el nombre de usuario
+    usuario = db_usuarios.get(username)
+    
+    # Verifica si el usuario existe en la base de datos
+    if usuario:
+        # Retorna el correo si el usuario existe
+        return True, usuario['email']
+    else:
+        return False, "Usuario incorrecto"
+
 def cargar_dataset():
     '''Función para importar la base de datos
     de las 250 recetas'''
@@ -362,6 +373,17 @@ if usuario_actual() is not None:
                         llave = itm.get("key")
                         db_usuarios.update({"password":ps_new},key=llave)
                         st.success("Contraseña cambiada con exito")
+
+
+                        bl_correo, email = obtener_correo_por_usuario(usuario)
+
+                        if bl_correo:
+
+                            asunto='Cambio de contraseña en CulinaryCraft'
+
+                            cuerpo=f"Hola {first_name},\n realizaste un cambio de contraseña, \n su nueva contraseña es: {ps_new}"
+                        
+                            enviar_correo(email,asunto,cuerpo)
 
                     else:
                         st.warning("Credenciales incorrectas")
