@@ -23,11 +23,14 @@ from email.mime.multipart import MIMEMultipart
 
 def registrar_usuario(username, password, first_name, last_name, email, confirm_password):
     '''Esta funcion usa la libreria tinydb para registrar un usuario en un archivo llamado
-    db_users
+    db_usurios
     '''
-    User = Query()
+    # User = Query()
     # Verifica si el usuario ya existe en la base de datos
-    if usuarios.search(User.username == username):
+    users = db_usuarios.fetch({"username": username})
+    
+    # Si hay algún resultado, significa que el usuario ya existe
+    if users.count > 0:
         return False, "El usuario ya existe. Por favor, elija otro nombre de usuario."
 
     # Verifica si las contraseñas coinciden
@@ -35,7 +38,8 @@ def registrar_usuario(username, password, first_name, last_name, email, confirm_
         return False, "Las contraseñas no coinciden. Por favor, vuelva a intentar."
 
     # Agrega el nuevo usuario a la base de datos
-    usuarios.insert({'username': username, 'password': password, 'first_name': first_name, 'last_name': last_name, 'email': email})
+    db_usuarios.put({'username': username, 'password': password, 'first_name': first_name,
+                'last_name': last_name, 'email': email})
 
     return True, "Registro exitoso. Ahora puede iniciar sesión."
 
@@ -43,11 +47,12 @@ def login(username, password):
     '''Esta funcion recibe como argumento el username y el password y verifica que
     sean inguales para permitir el ingreso al sistema
     '''
-    User = Query()
+    #User = Query()
     # Busca el usuario en la base de datos
-    user = usuarios.get((User.username == username) & (User.password == password))
-    if user:
-        return True, "Inicio de sesión exitoso. Presione el botón nuevamente."
+    user = db_usuarios.fetch({"username": username, "password": password})
+    
+    if user.count > 0:
+        return True, "Inicio de sesión exitoso."
     else:
         return False, "Credenciales incorrectas. Por favor, verifique su nombre de usuario y contraseña."
 
@@ -263,9 +268,25 @@ def enviar_correo(destinatario, asunto, cuerpo):
     except Exception as e:
         st.error(f"Error al enviar el correo: {e}")
 
+##########################################
+
+# Almacenamos la key de la base de datos en una constante
+DETA_KEY = "e0zpnxfprhj_QZXsbvo3bouG455EwHWZ5JJKzJEBZJZU"
+
+# Creamos nuestro objeto deta para hacer la conexion a la DB
+deta = Deta(DETA_KEY)
+
+# Inicializa la base de datos para usuarios
+
+db_usuarios = deta.Base("usuarios")
+
+##########################################
+
+
+
 # Se crea una instancia de la base de datos TinyDB llamada 'cf.json'
 cf = TinyDB('cf.json')
-usuarios = TinyDB('usuarios.json')
+# usuarios = TinyDB('usuarios.json')
 fav_recetas = TinyDB('fav_recetas.json')
 
 # Cargar el conjunto de datos
@@ -295,6 +316,10 @@ if 'username' not in st.session_state:
 
 # verifica si el usuario inició sesión
 if usuario_actual() is not None:
+
+    # se registra el username del usuario que inició sesión
+    username = st.session_state.username
+    
     # Sidebar para usuario logeado
     st.sidebar.title('Tabla de Contenido')
     selected_option = st.sidebar.selectbox("Menú", ['Inicio','Búsqueda por Nombre de Receta',
@@ -312,8 +337,8 @@ if usuario_actual() is not None:
             selected_option = 'Iniciar sesión'
 
     # se registra el username del usuario que inició sesión
-    username = st.session_state.username
-    User = Query()
+    # username = st.session_state.username
+    #User = Query()
 
     # Sección de inicio del usuario
     if selected_option == 'Inicio':
