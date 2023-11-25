@@ -320,7 +320,6 @@ if usuario_actual() is not None:
 
     # se registra el username del usuario que inició sesión
     username = st.session_state.username
-    email = st.session_state.email
     
     # Sidebar para usuario logeado
     st.sidebar.title('Tabla de Contenido')
@@ -363,13 +362,6 @@ if usuario_actual() is not None:
                         llave = itm.get("key")
                         db_usuarios.update({"password":ps_new},key=llave)
                         st.success("Contraseña cambiada con exito")
-
-
-                        asunto='Cambio de contraseña en CulinaryCraft'
-
-                        cuerpo=f"Hola {first_name},\n realizaste un cambio de contraseña, \n su nueva contraseña es: {ps_new}"
-                    
-                        enviar_correo(email,asunto,cuerpo)
 
                     else:
                         st.warning("Credenciales incorrectas")
@@ -835,8 +827,7 @@ if usuario_actual() is not None:
 
         cf.close()
 
-        
-
+# despliegue para usuario no loggeado
 else:
     # Menú desplegable en la barra lateral para usuarios no logeados
     st.sidebar.title('Tabla de Contenido')
@@ -907,13 +898,13 @@ else:
                     politica = archivo.read()
                     with st.expander("Política de Tratamiento de Datos",expanded=True):
                         st.write(politica)
-                        st.session_state.politica_vista = True
+                        aceptar_politica = st.checkbox("Acepta la política de datos personales")
+                        if aceptar_politica:
+                            st.session_state.politica_vista = True
 
-            # Casilla de verificación para aceptar la política
-            aceptar_politica = st.checkbox("Acepta la política de datos personales")
 
             # Botón de registro de usuario en la primera columna
-            if col1.button("Registrarse") and aceptar_politica and st.session_state.politica_vista:
+            if col1.button("Registrarse") and st.session_state.politica_vista:
                 registration_successful, message = registrar_usuario(new_username, new_password, first_name, last_name, email, confirm_password)
                 if registration_successful:
                     st.success(message)
