@@ -63,17 +63,6 @@ def usuario_actual():
     '''
     return st.session_state.username
 
-def obtener_correo_por_usuario(username):
-    # Realiza una consulta en la base de datos buscando el nombre de usuario
-    usuario = db_usuarios.get(username)
-    
-    # Verifica si el usuario existe en la base de datos
-    if usuario:
-        # Retorna el correo si el usuario existe
-        return True, usuario['email']
-    else:
-        return False, "Usuario incorrecto"
-
 def cargar_dataset():
     '''Función para importar la base de datos
     de las 250 recetas'''
@@ -331,6 +320,7 @@ if usuario_actual() is not None:
 
     # se registra el username del usuario que inició sesión
     username = st.session_state.username
+    email = st.session_state.email
     
     # Sidebar para usuario logeado
     st.sidebar.title('Tabla de Contenido')
@@ -375,16 +365,11 @@ if usuario_actual() is not None:
                         st.success("Contraseña cambiada con exito")
 
 
-                        itm = us_s.items[0]
-                        bl_correo = us_s.items[4]
+                        asunto='Cambio de contraseña en CulinaryCraft'
 
-                        if bl_correo:
-
-                            asunto='Cambio de contraseña en CulinaryCraft'
-
-                            cuerpo=f"Hola {first_name},\n realizaste un cambio de contraseña, \n su nueva contraseña es: {ps_new}"
-                        
-                            enviar_correo(email,asunto,cuerpo)
+                        cuerpo=f"Hola {first_name},\n realizaste un cambio de contraseña, \n su nueva contraseña es: {ps_new}"
+                    
+                        enviar_correo(email,asunto,cuerpo)
 
                     else:
                         st.warning("Credenciales incorrectas")
