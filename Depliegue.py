@@ -14,6 +14,7 @@ import streamlit as st
 # Versión: 4.8.0
 from tinydb import TinyDB, Query
 
+from deta import Deta
 import base64
 from io import BytesIO
 import smtplib
