@@ -918,9 +918,6 @@ else:
                 else:
                     st.error(message)
 
-            if not aceptar_politica:
-                st.warning("Por favor, acepta la política de datos personales antes de registrarte.")
-
             if not st.session_state.politica_vista:
                 st.warning("Por favor, ve la política de datos personales antes de registrarte.")
 
