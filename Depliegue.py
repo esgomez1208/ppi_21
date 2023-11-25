@@ -271,7 +271,7 @@ def enviar_correo(destinatario, asunto, cuerpo):
 ##########################################
 
 # Almacenamos la key de la base de datos en una constante
-DETA_KEY = "e0zpnxfprhj_QZXsbvo3bouG455EwHWZ5JJKzJEBZJZU"
+DETA_KEY = "e0zpnxfprhj_k9mu6XgGYApSvzNJHuFyvuQ74sYRZgvR"
 
 # Creamos nuestro objeto deta para hacer la conexion a la DB
 deta = Deta(DETA_KEY)
