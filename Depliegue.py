@@ -53,7 +53,7 @@ def login(username, password):
     user = db_usuarios.fetch({"username": username, "password": password})
     
     if user.count > 0:
-        return True, "Inicio de sesión exitoso."
+        return True, "Inicio de sesión exitoso. Presione el botón nuevamente."
     else:
         return False, "Credenciales incorrectas. Por favor, verifique su nombre de usuario y contraseña."
 
@@ -375,6 +375,7 @@ if usuario_actual() is not None:
                         st.success("Contraseña cambiada con exito")
 
 
+                        itm = us_s.items[0]
                         bl_correo = us_s.items[4]
 
                         if bl_correo:
