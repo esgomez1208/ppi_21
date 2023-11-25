@@ -889,7 +889,7 @@ else:
             # Inicializa la variable aceptar_politica
             
             # Variable de estado para rastrear si el usuario ha visto la política
-            politica_vista = False
+            st.session_state.politica_vista = False
 
             
             # Botón para abrir la ventana emergente en la segunda columna
@@ -900,11 +900,11 @@ else:
                         st.write(politica)
                         aceptar_politica = st.checkbox("Acepta la política de datos personales")
                         if aceptar_politica:
-                            politica_vista = True
+                            st.session_state.politica_vista = True
 
 
             # Botón de registro de usuario en la primera columna
-            if col1.button("Registrarse") and politica_vista:
+            if col1.button("Registrarse") and st.session_state.politica_vista:
                 registration_successful, message = registrar_usuario(new_username, new_password, first_name, last_name, email, confirm_password)
                 if registration_successful:
                     st.success(message)
