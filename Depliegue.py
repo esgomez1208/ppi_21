@@ -952,7 +952,7 @@ else:
                     st.error(message)
 
             if not st.session_state.politica_vista:
-                st.warning("Por favor, ve la política de datos personales antes de registrarte.")
+                st.warning("Por favor, ve la política de datos personales antes de registrarte y/o llene todos los campos.")
 
     # Sección de Inicio de sesión
     elif selected_option == 'Iniciar sesión':
