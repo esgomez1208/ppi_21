@@ -911,7 +911,8 @@ else:
             # Inicializa la variable aceptar_politica
             
             # Variable de estado para rastrear si el usuario ha visto la política
-            st.session_state.politica_vista = False
+            if 'politica_vista' not in st.session_state:
+                st.session_state.politica_vista = False
 
             
             # Botón para abrir la ventana emergente en la segunda columna
@@ -920,14 +921,14 @@ else:
                     politica = archivo.read()
                     with st.expander("Política de Tratamiento de Datos",expanded=True):
                         st.write(politica)
-                        aceptar_politica = st.checkbox("Acepta la política de datos personales")
-                        if aceptar_politica:
-                            st.session_state.politica_vista = True
+                        st.session_state.politica_vista = True
 
+            aceptar_politica = st.checkbox("Acepta la política de datos personales")
 
             # Botón de registro de usuario en la primera columna
-            if col1.button("Registrarse"):
+            if col1.button("Registrarse") and aceptar_politica and st.session_state.politica_vista:
                 registration_successful, message = registrar_usuario(new_username, new_password, first_name, last_name, email, confirm_password)
+                
                 if registration_successful:
                     st.success(message)
 
