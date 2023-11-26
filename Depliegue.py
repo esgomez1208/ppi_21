@@ -362,6 +362,7 @@ if usuario_actual() is not None:
                         llave = itm.get("key")
                         db_usuarios.update({"password":ps_new},key=llave)
                         st.success("Contraseña cambiada con exito")
+                        st.write(itm)
 
                     else:
                         st.warning("Credenciales incorrectas")
