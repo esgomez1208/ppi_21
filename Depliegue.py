@@ -14,6 +14,7 @@ import streamlit as st
 # Versión: 4.8.0
 from tinydb import TinyDB, Query
 
+from deta import Deta
 import base64
 from io import BytesIO
 import smtplib
@@ -23,11 +24,14 @@ from email.mime.multipart import MIMEMultipart
 
 def registrar_usuario(username, password, first_name, last_name, email, confirm_password):
     '''Esta funcion usa la libreria tinydb para registrar un usuario en un archivo llamado
-    db_users
+    db_usurios
     '''
-    User = Query()
+    # User = Query()
     # Verifica si el usuario ya existe en la base de datos
-    if usuarios.search(User.username == username):
+    users = db_usuarios.fetch({"username": username})
+    
+    # Si hay algún resultado, significa que el usuario ya existe
+    if users.count > 0:
         return False, "El usuario ya existe. Por favor, elija otro nombre de usuario."
 
     # Verifica si las contraseñas coinciden
@@ -35,7 +39,8 @@ def registrar_usuario(username, password, first_name, last_name, email, confirm_
         return False, "Las contraseñas no coinciden. Por favor, vuelva a intentar."
 
     # Agrega el nuevo usuario a la base de datos
-    usuarios.insert({'username': username, 'password': password, 'first_name': first_name, 'last_name': last_name, 'email': email})
+    db_usuarios.put({'username': username, 'password': password, 'first_name': first_name,
+                'last_name': last_name, 'email': email})
 
     return True, "Registro exitoso. Ahora puede iniciar sesión."
 
@@ -43,10 +48,11 @@ def login(username, password):
     '''Esta funcion recibe como argumento el username y el password y verifica que
     sean inguales para permitir el ingreso al sistema
     '''
-    User = Query()
+    #User = Query()
     # Busca el usuario en la base de datos
-    user = usuarios.get((User.username == username) & (User.password == password))
-    if user:
+    user = db_usuarios.fetch({"username": username, "password": password})
+    
+    if user.count > 0:
         return True, "Inicio de sesión exitoso. Presione el botón nuevamente."
     else:
         return False, "Credenciales incorrectas. Por favor, verifique su nombre de usuario y contraseña."
@@ -263,9 +269,25 @@ def enviar_correo(destinatario, asunto, cuerpo):
     except Exception as e:
         st.error(f"Error al enviar el correo: {e}")
 
+##########################################
+
+# Almacenamos la key de la base de datos en una constante
+DETA_KEY = "e0zpnxfprhj_k9mu6XgGYApSvzNJHuFyvuQ74sYRZgvR"
+
+# Creamos nuestro objeto deta para hacer la conexion a la DB
+deta = Deta(DETA_KEY)
+
+# Inicializa la base de datos para usuarios
+
+db_usuarios = deta.Base("usuarios")
+
+##########################################
+
+
+
 # Se crea una instancia de la base de datos TinyDB llamada 'cf.json'
 cf = TinyDB('cf.json')
-usuarios = TinyDB('usuarios.json')
+# usuarios = TinyDB('usuarios.json')
 fav_recetas = TinyDB('fav_recetas.json')
 
 # Cargar el conjunto de datos
@@ -295,6 +317,10 @@ if 'username' not in st.session_state:
 
 # verifica si el usuario inició sesión
 if usuario_actual() is not None:
+
+    # se registra el username del usuario que inició sesión
+    username = st.session_state.username
+    
     # Sidebar para usuario logeado
     st.sidebar.title('Tabla de Contenido')
     selected_option = st.sidebar.selectbox("Menú", ['Inicio','Búsqueda por Nombre de Receta',
@@ -312,8 +338,8 @@ if usuario_actual() is not None:
             selected_option = 'Iniciar sesión'
 
     # se registra el username del usuario que inició sesión
-    username = st.session_state.username
-    User = Query()
+    # username = st.session_state.username
+    #User = Query()
 
     # Sección de inicio del usuario
     if selected_option == 'Inicio':
@@ -323,15 +349,24 @@ if usuario_actual() is not None:
         
         # Apartado para cambiar de contraseña
         with st.expander(f'{username} aquí puede cambiar su contraseña:'):
-            current_password = st.text_input("Contraseña actual:", type = "password")
-            new_password = st.text_input("Nueva Contraseña:", type = "password")
-            confirm_password = st.text_input("Confirmar contraseña:", type = "password")
 
-            if st.button('Cambiar contraseña') and new_password == confirm_password:
-                cambiar_contraseña(username,current_password,new_password)
+            ps = st.text_input("Contraseña actual:", type="password")
+            ps_new = st.text_input("Nueva Contraseña:", type="password")
+            ps_new_conf = st.text_input("Confirmar Nueva Contraseña:", type="password")
+            if ps_new == ps_new_conf:
+                if st.button("Cambiar contraseña"):
+                    login_successful, message = login(username, ps)
+                    if login_successful:
+                        us_s = db_usuarios.fetch({"username":username})
+                        itm = us_s.items[0]
+                        llave = itm.get("key")
+                        db_usuarios.update({"password":ps_new},key=llave)
+                        st.success("Contraseña cambiada con exito")
 
+                    else:
+                        st.warning("Credenciales incorrectas")
             else:
-                st.warning('verifique sus credenciales')
+                st.warning("Las Contraseñas no coinciden")
 
         # Impresión de las recetas guardadas por el usuario
         st.write("Estas son las recetas que has guardado:")
@@ -357,82 +392,82 @@ if usuario_actual() is not None:
                                 #mostrar_receta = True
                                 recetas_filtradas.append(row)
 
-                        if recetas_filtradas:
-                            titulo = row['Título']
-
-                            # Variable que guarda el valor nutricional
-                            ingredientes_receta = row['NER'].split('&')
-
-                            # Mostrar la receta si no se excluye
-                            st.markdown(f'<h4 id="filtrado" style="text-align: left; color: skyblue;"\
-                            " font-style: italic;">{titulo}</h4>',\
-                                unsafe_allow_html=True)
-                            
-                            # Lista para almacenar el valor nutricional de cada ingrediente
-                            nutricional = []
-
-                            for ingrediente in ingredientes_receta:
-                                info_nutricional = valor_nutricional[valor_nutricional['name'] == ingrediente]
-                                calorias = info_nutricional['calories'].values[0] if not info_nutricional.empty else "No encontrado"
-
-                                nutricional.append({'Ingrediente' : ingrediente, 'Calorías' : calorias})
-
-                            # convirtiendo lista en un dataframe para mostrarlo como tabla
-                            tabla_valor_nutricional = pd.DataFrame(nutricional)
-
-
-                            # Agregar una sección de detalles emergente
-                            with st.expander(f'Detalles de la receta: {row["Título"]}', expanded=False):
-
-                                # Importar la columna de las imágenes de la receta
-                                image_URL = row['Imagen']
-                                st.image(image_URL)
-
-                                # Impresion de ingredientes
-                                ingredientes = row['Ingredientes'].split('&')
-
-                                st.markdown(f'<h5 id="filtrado" style="text-align: left; color: skyblue;"\
-                            " font-style: italic;">Ingredientes:</h5>',\
-                                unsafe_allow_html=True)
-
-                                for i in range(len(ingredientes)):
-                                    st.write(i+1 , ingredientes[i] )
-
-                                # Impresion de preparación
-                                preparacion = row['Preparacion'].split('&')
-
-                                st.markdown(f'<h5 id="filtrado" style="text-align: left; color: skyblue;"\
-                            " font-style: italic;">Preparación paso a paso:</h5>',\
-                                unsafe_allow_html=True)
-
-                                for i in range(len(preparacion)):
-                                    st.write(i+1 , preparacion[i] )
-
-                                # Aquí colocamos la tabla del valor nutricional de los ingredientes
-                                st.write(tabla_valor_nutricional)
-
-                                # Solicita al usuario la calificación
-                                calificacion = st.number_input(f"¿Cuánto le pones a esta receta {row['Título']} del 1 al 5?:", 
-                                                                min_value=0, max_value=5, step=1)
-
-                                # Verifica si el usuario proporcionó una calificación.
-                                if calificacion:
-                                    # Obtiene el título de la receta en formato de string
-                                    titulo = str(row['Título'])
-                                    
-                                    # Llama a una función para agregar la calificación a la receta
-                                    agregar_calificacion(titulo, calificacion)
-                                    
-                                    # Llama a una función para calcular el nuevo promedio de calificaciones de la receta
-                                    promedio(titulo, calificacion)
-
-                                if st.button(f'Borrar receta {titulo}'):
-                                    eliminar_receta_fav(username, titulo)
+                            if recetas_filtradas:
+                                titulo = row['Título']
+    
+                                # Variable que guarda el valor nutricional
+                                ingredientes_receta = row['NER'].split('&')
+    
+                                # Mostrar la receta si no se excluye
+                                st.markdown(f'<h4 id="filtrado" style="text-align: left; color: skyblue;"\
+                                " font-style: italic;">{titulo}</h4>',\
+                                    unsafe_allow_html=True)
+                                
+                                # Lista para almacenar el valor nutricional de cada ingrediente
+                                nutricional = []
+    
+                                for ingrediente in ingredientes_receta:
+                                    info_nutricional = valor_nutricional[valor_nutricional['name'] == ingrediente]
+                                    calorias = info_nutricional['calories'].values[0] if not info_nutricional.empty else "No encontrado"
+    
+                                    nutricional.append({'Ingrediente' : ingrediente, 'Calorías' : calorias})
+    
+                                # convirtiendo lista en un dataframe para mostrarlo como tabla
+                                tabla_valor_nutricional = pd.DataFrame(nutricional)
+    
+    
+                                # Agregar una sección de detalles emergente
+                                with st.expander(f'Detalles de la receta: {row["Título"]}', expanded=False):
+    
+                                    # Importar la columna de las imágenes de la receta
+                                    image_URL = row['Imagen']
+                                    st.image(image_URL)
+    
+                                    # Impresion de ingredientes
+                                    ingredientes = row['Ingredientes'].split('&')
+    
+                                    st.markdown(f'<h5 id="filtrado" style="text-align: left; color: skyblue;"\
+                                " font-style: italic;">Ingredientes:</h5>',\
+                                    unsafe_allow_html=True)
+    
+                                    for i in range(len(ingredientes)):
+                                        st.write(i+1 , ingredientes[i] )
+    
+                                    # Impresion de preparación
+                                    preparacion = row['Preparacion'].split('&')
+    
+                                    st.markdown(f'<h5 id="filtrado" style="text-align: left; color: skyblue;"\
+                                " font-style: italic;">Preparación paso a paso:</h5>',\
+                                    unsafe_allow_html=True)
+    
+                                    for i in range(len(preparacion)):
+                                        st.write(i+1 , preparacion[i] )
+    
+                                    # Aquí colocamos la tabla del valor nutricional de los ingredientes
+                                    st.write(tabla_valor_nutricional)
+    
+                                    # Solicita al usuario la calificación
+                                    calificacion = st.number_input(f"¿Cuánto le pones a esta receta {row['Título']} del 1 al 5?:", 
+                                                                    min_value=0, max_value=5, step=1)
+    
+                                    # Verifica si el usuario proporcionó una calificación.
+                                    if calificacion:
+                                        # Obtiene el título de la receta en formato de string
+                                        titulo = str(row['Título'])
+                                        
+                                        # Llama a una función para agregar la calificación a la receta
+                                        agregar_calificacion(titulo, calificacion)
+                                        
+                                        # Llama a una función para calcular el nuevo promedio de calificaciones de la receta
+                                        promedio(titulo, calificacion)
+    
+                                    if st.button(f'Borrar receta {titulo}'):
+                                        eliminar_receta_fav(username, titulo)
             else:
                 st.write(f"No se encontraron recetas favoritas para {username}")
 
         except Exception as e:
-            st.warning(f"Error en la función: {e}")
+            st.write(f"No se encontraron recetas favoritas para {username}")
 
    
     # Sección de busqueda por nombre de receta
@@ -792,8 +827,7 @@ if usuario_actual() is not None:
 
         cf.close()
 
-        
-
+# despliegue para usuario no loggeado
 else:
     # Menú desplegable en la barra lateral para usuarios no logeados
     st.sidebar.title('Tabla de Contenido')
@@ -864,13 +898,13 @@ else:
                     politica = archivo.read()
                     with st.expander("Política de Tratamiento de Datos",expanded=True):
                         st.write(politica)
-                        st.session_state.politica_vista = True
+                        aceptar_politica = st.checkbox("Acepta la política de datos personales")
+                        if aceptar_politica:
+                            st.session_state.politica_vista = True
 
-            # Casilla de verificación para aceptar la política
-            aceptar_politica = st.checkbox("Acepta la política de datos personales")
 
             # Botón de registro de usuario en la primera columna
-            if col1.button("Registrarse") and aceptar_politica and st.session_state.politica_vista:
+            if col1.button("Registrarse") and st.session_state.politica_vista:
                 registration_successful, message = registrar_usuario(new_username, new_password, first_name, last_name, email, confirm_password)
                 if registration_successful:
                     st.success(message)
@@ -883,9 +917,6 @@ else:
                     
                 else:
                     st.error(message)
-
-            if not aceptar_politica:
-                st.warning("Por favor, acepta la política de datos personales antes de registrarte.")
 
             if not st.session_state.politica_vista:
                 st.warning("Por favor, ve la política de datos personales antes de registrarte.")
