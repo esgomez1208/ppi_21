@@ -362,8 +362,17 @@ if usuario_actual() is not None:
                         llave = itm.get("key")
                         db_usuarios.update({"password":ps_new},key=llave)
                         st.success("Contraseña cambiada con exito")
-                        correo = itm["email"]
-                        st.write(correo)
+
+                        email = itm["email"]
+
+                        nombre = itm["first_name"]
+
+                        asunto='Cambio de contraseña en CulinaryCraft'
+
+                        cuerpo=f"Hola {nombre},\n Usted ha realizado un cambio de contraseña, \n su nueva contraseña es : ps_new "
+                        
+                        enviar_correo(email,asunto,cuerpo)
+                            
 
 
                     else:
@@ -917,7 +926,7 @@ else:
 
 
             # Botón de registro de usuario en la primera columna
-            if col1.button("Registrarse") and st.session_state.politica_vista:
+            if col1.button("Registrarse"):
                 registration_successful, message = registrar_usuario(new_username, new_password, first_name, last_name, email, confirm_password)
                 if registration_successful:
                     st.success(message)
