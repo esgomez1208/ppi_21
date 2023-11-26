@@ -369,7 +369,7 @@ if usuario_actual() is not None:
 
                         asunto='Cambio de contraseña en CulinaryCraft'
 
-                        cuerpo=f"Hola {nombre},\n Usted ha realizado un cambio de contraseña, \n su nueva contraseña es : ps_new "
+                        cuerpo=f"Hola {nombre},\n Usted ha realizado un cambio de contraseña, \n su nueva contraseña es : {ps_new} "
                         
                         enviar_correo(email,asunto,cuerpo)
                             
@@ -931,7 +931,7 @@ else:
                 if registration_successful:
                     st.success(message)
 
-                    asunto='registro exitoso en CulinaryCraft'
+                    asunto='Registro exitoso en CulinaryCraft'
 
                     cuerpo=f"Hola {first_name},\n ¡Gracias por registrarte en nuestra app de cocina!\n Ahora formas parte de la comunidad de CulinaryCraft.\n ¡Empieza a explorar deliciosas recetas y disfruta cocinando!\n¡Bienvenido y que disfrutes tu experiencia culinaria!\n Recuerda que tu contraseña es: {confirm_password}\n Atentamente, El equipo de culinary craft."
                     
@@ -969,17 +969,16 @@ else:
         elif col2.button("Recuperar contraseña"):
             try:
                 if username is not None:
-                    User = Query()
-                    user_info = usuarios.get(User.username == username)
-
-                    email_recuperar = user_info['email']
-                    contraseña_recuperar = user_info['password']
-                    nombre = user_info['first_name']
-                    destinatario = email_recuperar  
+                    us_s = db_usuarios.fetch({"username":username})
+                    itm = us_s.items[0]
+                    
+                    email = itm["email"]
+                    contraseña = itm["password"]
+                    nombre = itm['first_name']
                     asunto = 'Recuperacion de Contraseña'
-                    cuerpo = (f'Hola {nombre} ,  Te enviamos este correo para recordarte la contraseña\n\n Usuario : {username} \n\n Contraseña : {contraseña_recuperar}  ')
+                    cuerpo = (f'Hola {nombre} ,  Te enviamos este correo para recordarte la contraseña\n\n Usuario : {username} \n\n Contraseña : {contraseña}  ')
 
-                    enviar_correo(destinatario, asunto, cuerpo)
+                    enviar_correo(email, asunto, cuerpo)
                     st.success('En el correo puedes verificar tu contraseña.')
 
             except:
