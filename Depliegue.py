@@ -871,6 +871,16 @@ else:
         st.write("-Correo Electrónico: culinarycraftt@gmail.com")
         st.write("-Teléfono: +57 301 518 5942")
 
+        st.markdown('<h2 style="text-align: left; color: skyblue;">Realizado por:</h2>',\
+             unsafe_allow_html=True)
+
+        st.write("-Esteban Gómez Benítez")
+        st.write("-Correo Electrónico: esgomez@unal.edu.co")
+        st.write("")
+        st.write("-Felipe Taborda Medina")
+        st.write("-Correo Electrónico: ftabordam@unal.edu.co")
+        
+
     # Sección de Registro
     elif selected_option == "Registrarse":
             st.write("Registro de Usuario")
