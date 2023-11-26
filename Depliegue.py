@@ -909,7 +909,7 @@ else:
             new_password = st.text_input("Nueva Contraseña:", type = "password")
             confirm_password = st.text_input("Confirmar contraseña:", type = "password")
 
-            if (first_name and last_name and email and new_username and new_password and confirm_password) == True:
+            if (first_name and last_name and email and new_username and new_password and confirm_password) is not None:
                 st.session_state.campos_registro = True
 
             else: 
