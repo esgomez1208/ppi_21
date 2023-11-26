@@ -1055,8 +1055,12 @@ else:
                         " font-style: italic;">Ingredientes:</h5>',\
                             unsafe_allow_html=True)
 
-                            for i in range(len(ingredientes)):
-                                st.write(i+1 , ingredientes[i] )
+                            # Creación de un array NumPy a partir de la lista "ingredientes"
+                            ingredientes_array = np.array(ingredientes)
+
+                            # Iteración a través del array utilizando enumerate para obtener el índice y el valor
+                            for i, valor in enumerate(ingredientes_array):
+                                st.write(i + 1, valor)
 
                             # Impresion de preparación
                             preparacion = row['Preparacion'].split('&')
@@ -1065,8 +1069,6 @@ else:
                         " font-style: italic;">Preparación paso a paso:</h5>',\
                             unsafe_allow_html=True)
 
-                            #for i in range(len(preparacion)):
-                            #    st.write(i+1 , preparacion[i] )
 
                             # Creación de un array NumPy a partir de la lista "preparacion"
                             preparacion_array = np.array(preparacion)
