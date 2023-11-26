@@ -897,6 +897,10 @@ else:
     elif selected_option == "Registrarse":
             st.write("Registro de Usuario")
 
+
+            if 'campos_registro' not in st.session_state:
+                st.session_state.campos_registro = False
+
             # Campos de registro
             first_name = st.text_input("Nombre del Usuario:")
             last_name = st.text_input("Apellidos del Usuario:")
@@ -904,6 +908,12 @@ else:
             new_username = st.text_input("Nickname:")
             new_password = st.text_input("Nueva Contraseña:", type = "password")
             confirm_password = st.text_input("Confirmar contraseña:", type = "password")
+
+            if (first_name and last_name and email and new_username and new_password and confirm_password) == True:
+                st.session_state.campos_registro = True
+
+            else: 
+                st.warning("Llene todos los campos")
 
             # Crear dos columnas para los botones
             col1, col2 = st.columns(2)
@@ -926,7 +936,7 @@ else:
             aceptar_politica = st.checkbox("Acepta la política de datos personales")
 
             # Botón de registro de usuario en la primera columna
-            if col1.button("Registrarse") and aceptar_politica and st.session_state.politica_vista:
+            if col1.button("Registrarse") and aceptar_politica and st.session_state.politica_vista and st.session_state.campos_registro:
                 registration_successful, message = registrar_usuario(new_username, new_password, first_name, last_name, email, confirm_password)
                 
                 if registration_successful:
