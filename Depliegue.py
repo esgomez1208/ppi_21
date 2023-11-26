@@ -5,9 +5,6 @@ import pandas as pd
 # Versión Numpy: 1.26.0
 import numpy as np
 
-# Versión Matplotlib: 3.8.1
-import matplotlib.pyplot as plt
-
 # Versión: 1.27.2
 import streamlit as st  
 
@@ -328,7 +325,7 @@ if usuario_actual() is not None:
                                         'Búsqueda de Recetas por Filtrado'])
     
     # reserva de espacio para mostrar botón en la parte inferior
-    for i in np.arange(15):
+    for _ in np.arange(15):
         st.sidebar.text("")
 
     # Botón para cerrar sesión
@@ -362,6 +359,18 @@ if usuario_actual() is not None:
                         llave = itm.get("key")
                         db_usuarios.update({"password":ps_new},key=llave)
                         st.success("Contraseña cambiada con exito")
+
+                        email = itm["email"]
+
+                        nombre = itm["first_name"]
+
+                        asunto='Cambio de contraseña en CulinaryCraft'
+
+                        cuerpo=f"Hola {nombre},\n Usted ha realizado un cambio de contraseña, \n su nueva contraseña es : {ps_new} "
+                        
+                        enviar_correo(email,asunto,cuerpo)
+                            
+
 
                     else:
                         st.warning("Credenciales incorrectas")
@@ -544,8 +553,12 @@ if usuario_actual() is not None:
                         " font-style: italic;">Ingredientes:</h5>',\
                             unsafe_allow_html=True)
 
-                            for i in range(len(ingredientes)):
-                                st.write(i+1 , ingredientes[i] )
+                            # Creación de un array NumPy a partir de la lista "ingredientes"
+                            ingredientes_array = np.array(ingredientes)
+
+                            # Iteración a través del array utilizando enumerate para obtener el índice y el valor
+                            for i, valor in enumerate(ingredientes_array):
+                                st.write(i + 1, valor)
 
                             # Impresion de preparación
                             preparacion = row['Preparacion'].split('&')
@@ -554,8 +567,12 @@ if usuario_actual() is not None:
                         " font-style: italic;">Preparación paso a paso:</h5>',\
                             unsafe_allow_html=True)
 
-                            for i in range(len(preparacion)):
-                                st.write(i+1 , preparacion[i] )
+                            # Creación de un array NumPy a partir de la lista "preparacion"
+                            preparacion_array = np.array(preparacion)
+
+                            # Iteración a través del array utilizando enumerate para obtener el índice y el valor
+                            for i, valor in enumerate(preparacion_array):
+                                st.write(i + 1, valor)
 
                             # Aquí colocamos la tabla del valor nutricional de los ingredientes
                             st.write(tabla_valor_nutricional)
@@ -656,8 +673,12 @@ if usuario_actual() is not None:
                         " font-style: italic;">Ingredientes:</h5>',\
                             unsafe_allow_html=True)
 
-                            for i in range(len(ingredientes)):
-                                st.write(i+1 , ingredientes[i] )
+                            # Creación de un array NumPy a partir de la lista "ingredientes"
+                            ingredientes_array = np.array(ingredientes)
+
+                            # Iteración a través del array utilizando enumerate para obtener el índice y el valor
+                            for i, valor in enumerate(ingredientes_array):
+                                st.write(i + 1, valor)
 
                             # Impresion de preparación
                             preparacion = row['Preparacion'].split('&')
@@ -666,8 +687,12 @@ if usuario_actual() is not None:
                         " font-style: italic;">Preparación paso a paso:</h5>',\
                             unsafe_allow_html=True)
 
-                            for i in range(len(preparacion)):
-                                st.write(i+1 , preparacion[i] )
+                            # Creación de un array NumPy a partir de la lista "preparacion"
+                            preparacion_array = np.array(preparacion)
+
+                            # Iteración a través del array utilizando enumerate para obtener el índice y el valor
+                            for i, valor in enumerate(preparacion_array):
+                                st.write(i + 1, valor)
 
                             # Aquí colocamos la tabla del valor nutricional de los ingredientes
                             st.write(tabla_valor_nutricional)
@@ -788,8 +813,12 @@ if usuario_actual() is not None:
                     " font-style: italic;">Ingredientes:</h5>',\
                         unsafe_allow_html=True)
 
-                        for i in range(len(ingredientes)):
-                            st.write(i+1 , ingredientes[i] )
+                        # Creación de un array NumPy a partir de la lista "ingredientes"
+                        ingredientes_array = np.array(ingredientes)
+
+                        # Iteración a través del array utilizando enumerate para obtener el índice y el valor
+                        for i, valor in enumerate(ingredientes_array):
+                            st.write(i + 1, valor)
 
                         # Impresion de preparación
                         preparacion = row['Preparacion'].split('&')
@@ -798,8 +827,12 @@ if usuario_actual() is not None:
                     " font-style: italic;">Preparación paso a paso:</h5>',\
                         unsafe_allow_html=True)
 
-                        for i in range(len(preparacion)):
-                            st.write(i+1 , preparacion[i] )
+                        # Creación de un array NumPy a partir de la lista "preparacion"
+                        preparacion_array = np.array(preparacion)
+
+                        # Iteración a través del array utilizando enumerate para obtener el índice y el valor
+                        for i, valor in enumerate(preparacion_array):
+                            st.write(i + 1, valor)
 
                         # Aquí colocamos la tabla del valor nutricional de los ingredientes
                         st.write(tabla_valor_nutricional)
@@ -871,9 +904,23 @@ else:
         st.write("-Correo Electrónico: culinarycraftt@gmail.com")
         st.write("-Teléfono: +57 301 518 5942")
 
+        st.markdown('<h2 style="text-align: left; color: skyblue;">Realizado por:</h2>',\
+             unsafe_allow_html=True)
+
+        st.write("-Esteban Gómez Benítez")
+        st.write("-Correo Electrónico: esgomez@unal.edu.co")
+        st.write("")
+        st.write("-Felipe Taborda Medina")
+        st.write("-Correo Electrónico: ftabordam@unal.edu.co")
+        
+
     # Sección de Registro
     elif selected_option == "Registrarse":
             st.write("Registro de Usuario")
+
+
+            if 'campos_registro' not in st.session_state:
+                st.session_state.campos_registro = False
 
             # Campos de registro
             first_name = st.text_input("Nombre del Usuario:")
@@ -883,13 +930,20 @@ else:
             new_password = st.text_input("Nueva Contraseña:", type = "password")
             confirm_password = st.text_input("Confirmar contraseña:", type = "password")
 
+            if (first_name and last_name and email and new_username and new_password and confirm_password) is not None:
+                st.session_state.campos_registro = True
+
+            else: 
+                st.warning("Llene todos los campos")
+
             # Crear dos columnas para los botones
             col1, col2 = st.columns(2)
             # Casilla de verificación para aceptar la política de datos personales
             # Inicializa la variable aceptar_politica
             
             # Variable de estado para rastrear si el usuario ha visto la política
-            st.session_state.politica_vista = False
+            if 'politica_vista' not in st.session_state:
+                st.session_state.politica_vista = False
 
             
             # Botón para abrir la ventana emergente en la segunda columna
@@ -898,18 +952,18 @@ else:
                     politica = archivo.read()
                     with st.expander("Política de Tratamiento de Datos",expanded=True):
                         st.write(politica)
-                        aceptar_politica = st.checkbox("Acepta la política de datos personales")
-                        if aceptar_politica:
-                            st.session_state.politica_vista = True
+                        st.session_state.politica_vista = True
 
+            aceptar_politica = st.checkbox("Acepta la política de datos personales")
 
             # Botón de registro de usuario en la primera columna
-            if col1.button("Registrarse") and st.session_state.politica_vista:
+            if col1.button("Registrarse") and aceptar_politica and st.session_state.politica_vista and st.session_state.campos_registro:
                 registration_successful, message = registrar_usuario(new_username, new_password, first_name, last_name, email, confirm_password)
+                
                 if registration_successful:
                     st.success(message)
 
-                    asunto='registro exitoso en CulinaryCraft'
+                    asunto='Registro exitoso en CulinaryCraft'
 
                     cuerpo=f"Hola {first_name},\n ¡Gracias por registrarte en nuestra app de cocina!\n Ahora formas parte de la comunidad de CulinaryCraft.\n ¡Empieza a explorar deliciosas recetas y disfruta cocinando!\n¡Bienvenido y que disfrutes tu experiencia culinaria!\n Recuerda que tu contraseña es: {confirm_password}\n Atentamente, El equipo de culinary craft."
                     
@@ -919,7 +973,7 @@ else:
                     st.error(message)
 
             if not st.session_state.politica_vista:
-                st.warning("Por favor, ve la política de datos personales antes de registrarte.")
+                st.warning("Por favor, ve la política de datos personales antes de registrarte y/o llene todos los campos.")
 
     # Sección de Inicio de sesión
     elif selected_option == 'Iniciar sesión':
@@ -947,17 +1001,16 @@ else:
         elif col2.button("Recuperar contraseña"):
             try:
                 if username is not None:
-                    User = Query()
-                    user_info = usuarios.get(User.username == username)
-
-                    email_recuperar = user_info['email']
-                    contraseña_recuperar = user_info['password']
-                    nombre = user_info['first_name']
-                    destinatario = email_recuperar  
+                    us_s = db_usuarios.fetch({"username":username})
+                    itm = us_s.items[0]
+                    
+                    email = itm["email"]
+                    contraseña = itm["password"]
+                    nombre = itm['first_name']
                     asunto = 'Recuperacion de Contraseña'
-                    cuerpo = (f'Hola {nombre} ,  Te enviamos este correo para recordarte la contraseña\n\n Usuario : {username} \n\n Contraseña : {contraseña_recuperar}  ')
+                    cuerpo = (f'Hola {nombre} ,  Te enviamos este correo para recordarte la contraseña\n\n Usuario : {username} \n\n Contraseña : {contraseña}  ')
 
-                    enviar_correo(destinatario, asunto, cuerpo)
+                    enviar_correo(email, asunto, cuerpo)
                     st.success('En el correo puedes verificar tu contraseña.')
 
             except:
@@ -1026,8 +1079,12 @@ else:
                         " font-style: italic;">Ingredientes:</h5>',\
                             unsafe_allow_html=True)
 
-                            for i in range(len(ingredientes)):
-                                st.write(i+1 , ingredientes[i] )
+                            # Creación de un array NumPy a partir de la lista "ingredientes"
+                            ingredientes_array = np.array(ingredientes)
+
+                            # Iteración a través del array utilizando enumerate para obtener el índice y el valor
+                            for i, valor in enumerate(ingredientes_array):
+                                st.write(i + 1, valor)
 
                             # Impresion de preparación
                             preparacion = row['Preparacion'].split('&')
@@ -1036,8 +1093,13 @@ else:
                         " font-style: italic;">Preparación paso a paso:</h5>',\
                             unsafe_allow_html=True)
 
-                            for i in range(len(preparacion)):
-                                st.write(i+1 , preparacion[i] )
+
+                            # Creación de un array NumPy a partir de la lista "preparacion"
+                            preparacion_array = np.array(preparacion)
+
+                            # Iteración a través del array utilizando enumerate para obtener el índice y el valor
+                            for i, valor in enumerate(preparacion_array):
+                                st.write(i + 1, valor)
                        
             else:
                 st.write("No se encontraron resultados.")
