@@ -5,9 +5,6 @@ import pandas as pd
 # Versión Numpy: 1.26.0
 import numpy as np
 
-# Versión Matplotlib: 3.8.1
-import matplotlib.pyplot as plt
-
 # Versión: 1.27.2
 import streamlit as st  
 
@@ -328,7 +325,7 @@ if usuario_actual() is not None:
                                         'Búsqueda de Recetas por Filtrado'])
     
     # reserva de espacio para mostrar botón en la parte inferior
-    for i in np.arange(15):
+    for _ in np.arange(15):
         st.sidebar.text("")
 
     # Botón para cerrar sesión
@@ -1068,8 +1065,15 @@ else:
                         " font-style: italic;">Preparación paso a paso:</h5>',\
                             unsafe_allow_html=True)
 
-                            for i in range(len(preparacion)):
-                                st.write(i+1 , preparacion[i] )
+                            #for i in range(len(preparacion)):
+                            #    st.write(i+1 , preparacion[i] )
+
+                            # Creación de un array NumPy a partir de la lista "preparacion"
+                            preparacion_array = np.array(preparacion)
+
+                            # Iteración a través del array utilizando enumerate para obtener el índice y el valor
+                            for i, valor in enumerate(preparacion_array):
+                                st.write(i + 1, valor)
                        
             else:
                 st.write("No se encontraron resultados.")
